@@ -1,30 +1,97 @@
-# This file configures the static analysis results for your project (errors,
-# warnings, and lints).
-#
-# This enables the 'recommended' set of lints from `package:lints`.
-# This set helps identify many issues that may lead to problems when running
-# or consuming Dart code, and enforces writing Dart using a single, idiomatic
-# style and format.
-#
-# If you want a smaller set of lints you can change this to specify
-# 'package:lints/core.yaml'. These are just the most critical lints
-# (the recommended set includes the core lints).
-# The core lints are also what is used by pub.dev for scoring packages.
-
 include: package:lints/recommended.yaml
 
-# Uncomment the following section to specify additional rules.
+formatter:
+  page_width: 105
 
-# linter:
-#   rules:
-#     - camel_case_types
+analyzer:
+  plugins:
+    - dart_code_metrics
 
-# analyzer:
-#   exclude:
-#     - path/to/excluded/files/**
+linter:
+  rules:
+  - prefer_single_quotes
+  - always_declare_return_types
+  - public_member_api_docs
+  - always_put_control_body_on_new_line
+  - await_only_futures
+  - cascade_invocations
+  - combinators_ordering
+  - require_trailing_commas
+  - flutter_style_todos
+  - library_annotations
+  - lines_longer_than_80_chars
+  - missing_whitespace_between_adjacent_strings
+  - prefer_foreach
+  - unawaited_futures
+  - unnecessary_breaks
+  - unnecessary_lambdas
+  - unnecessary_parenthesis
+  - use_enums
+  - sort_pub_dependencies
 
-# For more information about the core and recommended set of lints, see
-# https://dart.dev/go/core-lints
+# dart_code_metrics checks (these are based on SIG standards as was found on BetterCodeHub)
+dart_code_metrics:
+  rules:
+    # General
+    - arguments-ordering
+    - avoid-collection-methods-with-unrelated-types
+    - avoid-dynamic
+    - avoid-ignoring-return-values
+    - avoid-passing-async-when-sync-expected
+    - avoid-redundant-async
+    - avoid-unnecessary-conditionals
+    - double-literal-format
+    - format-comment:
+        ignored-patterns:
+          - ^ {@
+          - ^ \#
+          - ^ ```
+          - ^ <!
+    - member-ordering
+    - newline-before-return
+    - no-magic-number:
+        allowed: [360]
+        allow-only-once: true
+    - prefer-async-await
+    - prefer-commenting-analyzer-ignores
+    - prefer-conditional-expressions
+    - refer-correct-identifier-length:
+        max-identifier-length: 30
+        min-identifier-length: 4
+    - prefer-first
+    - prefer-immediate-return
+    - prefer-last
+    - prefer-match-file-name
+    - prefer-static-class
 
-# For additional information about configuring this file, see
-# https://dart.dev/guides/language/analysis-options
+    # Flutter specific
+    - always-remove-listener
+    - avoid-shrink-wrap-in-lists
+    - avoid-unnecessary-setstate
+    - use-setstate-synchronously
+    - avoid-expanded-as-spacer
+    - avoid-wrapping-in-padding
+    - check-for-equals-in-render-object-setters
+    - consistent-update-render-object
+    - prefer-correct-edge-insets-constructor
+    - prefer-extracting-callbacks
+    - prefer-using-list-view
+
+  metrics:
+    source-lines-of-code: 25 # 1. Write short units of code
+    cyclomatic-complexity: 7 # 2. Write simple units of code
+    number-of-parameters: 4 # 4. Keep unit interfaces small
+    halstead-volume: 200 # 8. Keep your codebase small (in terms of details you need to know and understand)
+
+    weight-of-class: 0.5 # ~. General housekeeping
+    maximum-nesting-level: 5
+
+    technical-debt:
+      threshold: 1
+      todo-cost: 1
+      ignore-cost: 3
+      ignore-for-file-cost: 5
+      as-dynamic-cost: 1
+      deprecated-annotations-cost: 3
+      file-nullsafety-migration-cost: 5
+      unit-type: "Hours"

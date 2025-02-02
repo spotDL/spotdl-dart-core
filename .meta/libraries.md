@@ -9,3 +9,6 @@ Youtube
 
 FFmpeg
     - ffmpeg_wasm
+
+Spotify
+    - spotify
