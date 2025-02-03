@@ -17,7 +17,7 @@ void main(List<String> args) async {
       continue;
     } else {
       print('');
-      var playlists = await se.searchForPlaylist(input);
+      var playlists = await se.searchForAlbum(input);
       playlists.forEach(print);
     }
   }

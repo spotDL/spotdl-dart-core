@@ -2,7 +2,7 @@ part of '../spotify.dart';
 
 /// Search & Utility functions to find Tracks.
 extension TrackSearch on SpotifyEngine {
-  /// Searches Spotify with the given query.
+  /// Searches for tracks on Spotify.
   Future<List<SpotifyResult>> searchForTrack(String query, [int itemCount = 5]) async {
     var resultPages =
         await _spotifyEngine.search.get(query, types: [SearchType.track]).first(itemCount);
@@ -40,9 +40,8 @@ extension TrackSearch on SpotifyEngine {
   /// ### Note
   /// - URL needn't be *cleaned* before passing it to this function.
   ///
-  // NOTE: Named 'getTracks' instead of 'getTrack' for consistency with other functions.
-  Future<SpotifyResult> getTracksFromTrackUrl(String url) async {
-    var track = await _spotifyEngine.tracks.get(SpotifyEngine.extractUri(url));
+  Future<SpotifyResult> getTrackFromTrackUrl(String url) async {
+    var track = await _spotifyEngine.tracks.get(SpotifyEngine.extractId(url));
 
     return SpotifyResult(
       artists: track.artists!.map((artist) => artist.name!).toList(),
@@ -54,6 +53,29 @@ extension TrackSearch on SpotifyEngine {
     );
   }
 
+  /// Get the tracks from a Spotify Album URL / URI.
+  Future<List<SpotifyResult>> getTracksFromAlbumUrl(String url) async {
+    var results = <SpotifyResult>[];
+
+    var tracks = await _spotifyEngine.albums.tracks(SpotifyEngine.extractId(url)).all();
+    var album = await _spotifyEngine.albums.get(SpotifyEngine.extractId(url));
+
+    for (var track in tracks) {
+      results.add(
+        SpotifyResult(
+          artists: track.artists!.map((artist) => artist.name!).toList(),
+          title: track.name!,
+          album: album.name!,
+          sDuration: track.durationMs! ~/ 1000,
+          url: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
+          source: TokenSrc.spotify,
+        ),
+      );
+    }
+
+    return results;
+  }
+
   /// Get the tracks from a Spotify Playlist URL / URI.
   ///
   /// ### Note
@@ -62,7 +84,7 @@ extension TrackSearch on SpotifyEngine {
     var results = <SpotifyResult>[];
 
     var tracks =
-        await _spotifyEngine.playlists.getTracksByPlaylistId(SpotifyEngine.extractUri(url)).all();
+        await _spotifyEngine.playlists.getTracksByPlaylistId(SpotifyEngine.extractId(url)).all();
 
     for (var track in tracks) {
       results.add(

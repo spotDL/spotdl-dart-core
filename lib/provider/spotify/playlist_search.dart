@@ -43,7 +43,7 @@ extension PlaylistSearch on SpotifyEngine {
   /// - The URL needn't be *cleaned* before passing it to this function.
   Future<List<Playlist>> getUserPlaylists(String url) async {
     var userPlaylists =
-        await _spotifyEngine.playlists.getUsersPlaylists(SpotifyEngine.extractUri(url)).all();
+        await _spotifyEngine.playlists.getUsersPlaylists(SpotifyEngine.extractId(url)).all();
 
     return userPlaylists
         .map(
@@ -58,7 +58,7 @@ extension PlaylistSearch on SpotifyEngine {
 
   /// Get the playlists from a Spotify Playlist URL / URI.
   Future<Playlist> getPlaylistFromPlaylistUrl(String url) async {
-    var playlist = await _spotifyEngine.playlists.get(SpotifyEngine.extractUri(url));
+    var playlist = await _spotifyEngine.playlists.get(SpotifyEngine.extractId(url));
 
     return Playlist(
       name: playlist.name!,
