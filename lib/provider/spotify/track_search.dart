@@ -26,6 +26,8 @@ extension TrackSearch on SpotifyEngine {
               sDuration: track.durationMs! ~/ 1000,
               url: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
               source: TokenSrc.spotify,
+              diskNumber: track.discNumber!,
+              trackNumber: track.trackNumber!,
             ),
           );
         }
@@ -50,6 +52,8 @@ extension TrackSearch on SpotifyEngine {
       sDuration: track.durationMs! ~/ 1000,
       url: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
       source: TokenSrc.spotify,
+      diskNumber: track.discNumber!,
+      trackNumber: track.trackNumber!,
     );
   }
 
@@ -69,6 +73,8 @@ extension TrackSearch on SpotifyEngine {
           sDuration: track.durationMs! ~/ 1000,
           url: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
           source: TokenSrc.spotify,
+          diskNumber: track.discNumber!,
+          trackNumber: track.trackNumber!,
         ),
       );
     }
@@ -95,6 +101,8 @@ extension TrackSearch on SpotifyEngine {
           sDuration: track.durationMs! ~/ 1000,
           url: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
           source: TokenSrc.spotify,
+          diskNumber: track.discNumber!,
+          trackNumber: track.trackNumber!,
         ),
       );
     }
