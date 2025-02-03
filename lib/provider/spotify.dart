@@ -10,3 +10,4 @@ import 'package:spotdl_dart_core/provider/common.dart';
 part 'spotify/spotify_result.dart';
 part 'spotify/spotify_engine.dart';
 part 'spotify/track_search.dart';
+part 'spotify/playlist_search.dart';

@@ -13,4 +13,9 @@ class SpotifyEngine {
 
     _spotifyEngine = SpotifyApi(credentials);
   }
+
+  /// Extract the URI from a Spotify URL.
+  static String extractUri(String url) {
+    return url.split('/').last.split('?si=').first;
+  }
 }

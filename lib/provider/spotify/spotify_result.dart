@@ -1,6 +1,6 @@
 part of '../spotify.dart';
 
-/// A search result from Spotify.
+/// A search result (Track) from Spotify.
 class SpotifyResult extends Result {
   @override
   final List<String> artists;
