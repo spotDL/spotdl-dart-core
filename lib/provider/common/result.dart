@@ -9,19 +9,22 @@ abstract class Result {
   String get title;
 
   /// Album of the song.
-  String get album;
+  String? get album;
 
   /// Duration of the song in seconds.
   int get sDuration;
 
-  /// URL of the song.
-  String get url;
+  /// URL of the song from the given source.
+  String get srcUrl;
 
-  /// [TokenSrc] of the song.
-  TokenSrc get source;
+  /// URL to a downloadable stream from the given source.
+  String? get dlUrl;
+
+  /// [Source] of the song.
+  Source get source;
 
   @override
   String toString() {
-    return '$title by ${artists.join(', ')} from "$album", ${sDuration}s\n\t$url\n\t$source';
+    return '$title by ${artists.join(', ')} from "$album", ${sDuration}s\n\t$srcUrl\n\t$source ($dlUrl)';
   }
 }

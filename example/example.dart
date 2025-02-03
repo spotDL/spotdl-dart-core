@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:spotdl_dart_core/provider/spotify.dart';
+import 'package:spotdl_dart_core/provider/youtube.dart';
 
 void main(List<String> args) async {
-  var se = SpotifyEngine();
+  var yt = YoutubeEngine();
+  var sp = SpotifyEngine();
 
   var input = '';
 
@@ -16,9 +18,15 @@ void main(List<String> args) async {
     } else if (input == '') {
       continue;
     } else {
-      print('');
-      var playlists = await se.searchForAlbum(input);
-      playlists.forEach(print);
+      var spRes = await sp.searchForTrack(input, 1);
+      print(spRes.first);
+
+      print('-' * 150);
+
+      var ytQry = await yt.constructSearchQuery(spRes.first);
+      (await yt.searchForTrack(ytQry)).forEach((ytRes) => print('$ytRes\n'));
+
+      print('-' * 150);
     }
   }
 }

@@ -9,16 +9,19 @@ class YouTubeResult extends Result {
   final String title;
 
   @override
-  final String album;
+  final String? album;
 
   @override
   final int sDuration;
 
   @override
-  final String url;
+  final String srcUrl;
 
   @override
-  final TokenSrc source;
+  final String? dlUrl;
+
+  @override
+  final Source source;
 
   /// Creates a new [YouTubeResult].
   YouTubeResult({
@@ -26,7 +29,8 @@ class YouTubeResult extends Result {
     required this.title,
     required this.album,
     required this.sDuration,
-    required this.url,
+    required this.srcUrl,
+    required this.dlUrl,
     required this.source,
   });
 }

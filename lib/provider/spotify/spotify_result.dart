@@ -21,10 +21,13 @@ class SpotifyResult extends Result {
   final int sDuration;
 
   @override
-  final String url;
+  final String srcUrl;
 
   @override
-  final TokenSrc source;
+  final String? dlUrl = null;
+
+  @override
+  final Source source;
 
   /// The disk number of the track. `1` unless from an multi-disk album.
   final int diskNumber;
@@ -38,7 +41,7 @@ class SpotifyResult extends Result {
     required this.title,
     required this.album,
     required this.sDuration,
-    required this.url,
+    required this.srcUrl,
     required this.source,
     required this.diskNumber,
     required this.trackNumber,

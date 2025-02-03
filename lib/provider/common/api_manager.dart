@@ -2,8 +2,8 @@ part of '../common.dart';
 
 /// Handles serving of API tokens.
 class ApiManager {
-  static final _defaultTokens = <TokenSrc, Map<TokenPart, String>>{
-    TokenSrc.spotify: {
+  static final _defaultTokens = <Source, Map<TokenPart, String>>{
+    Source.spotify: {
       TokenPart.id: '5f573c9620494bae87890c0f08a60293',
       TokenPart.se: '212476d9b0f3472eaa762d90b19b0ba8',
     },
@@ -12,7 +12,7 @@ class ApiManager {
   /// All updated API keys.
   ///
   /// ### Note
-  /// - See also [TokenSrc] and [TokenPart].
+  /// - See also [Source] and [TokenPart].
   ///
   /// - If a `.apikeys` file is found in the executable directory, values from that file will be
   ///   used, else default values will be used.
@@ -21,13 +21,13 @@ class ApiManager {
   ///   ```json
   ///   {
   ///     // Keys are `Src` / `Part` enum values as Strings.
-  ///     "Src.spotify": {
+  ///     "Source.spotify": {
   ///       "TokenPart.id": "your_spotify_id",
   ///       "TokenPart.se": "your_spotify_secret"
   ///     }
   ///   }
   ///   ```
-  static Map<TokenSrc, Map<TokenPart, String>> get tokens {
+  static Map<Source, Map<TokenPart, String>> get tokens {
     // Note: Platform.resolvedExecutable points to the dart executable in script form, and
     // the compiled executable after application compilation, take this into consideration while
     // writing test code during development.
@@ -43,7 +43,7 @@ class ApiManager {
       (jsonDecode(tokenData) as Map<String, dynamic>).forEach(
         (key, value) {
           // String -> Src conversion for easy updating later.
-          var srcToken = TokenSrc.values.firstWhere((token) => token.toString() == key);
+          var srcToken = Source.values.firstWhere((token) => token.toString() == key);
 
           (value as Map<String, dynamic>).forEach(
             (key, value) {
@@ -59,15 +59,6 @@ class ApiManager {
 
     return _defaultTokens;
   }
-}
-
-/// API Token Sources.
-enum TokenSrc {
-  /// Spotify.
-  spotify,
-
-  /// YouTube.
-  youtube
 }
 
 /// Parts of the API Token.

@@ -8,9 +8,8 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  youtube_explode_dart: ^2.3.6
   spotify: ^0.13.7
-  # path: ^1.8.0
+  youtube_explode_dart: ^2.3.6
 
 dev_dependencies:
   dart_code_metrics: ^4.19.2
