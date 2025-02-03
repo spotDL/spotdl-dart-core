@@ -18,7 +18,7 @@ class SpotifyResult extends Result {
   final String url;
 
   @override
-  final Src source;
+  final TokenSrc source;
 
   /// Creates a new [SpotifyResult].
   SpotifyResult({

@@ -1,7 +1,9 @@
 /// Elements common to all providers.
 library;
 
-part 'common/apikeys.dart';
+// Dart imports:
+import 'dart:convert';
+import 'dart:io';
 
-part 'common/src.dart';
+part 'common/api_manager.dart';
 part 'common/result.dart';

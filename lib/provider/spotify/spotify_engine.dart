@@ -7,8 +7,8 @@ class SpotifyEngine {
   /// Creates a new [SpotifyEngine].
   SpotifyEngine() {
     var credentials = SpotifyApiCredentials(
-      apiKeys[Src.spotify]![Part.id],
-      apiKeys[Src.spotify]![Part.se],
+      ApiManager.tokens[TokenSrc.spotify]![TokenPart.id],
+      ApiManager.tokens[TokenSrc.spotify]![TokenPart.se],
     );
 
     _spotifyEngine = SpotifyApi(credentials);

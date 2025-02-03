@@ -1,10 +1,6 @@
 /// Search & Utility functions for searching Spotify.
 library;
 
-// Dart imports:
-import 'dart:convert';
-import 'dart:io';
-
 // Package imports:
 import 'package:spotify/spotify.dart';
 

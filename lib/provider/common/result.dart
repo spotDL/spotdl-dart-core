@@ -17,8 +17,8 @@ abstract class Result {
   /// URL of the song.
   String get url;
 
-  /// [Src] of the song.
-  Src get source;
+  /// [TokenSrc] of the song.
+  TokenSrc get source;
 
   @override
   String toString() {

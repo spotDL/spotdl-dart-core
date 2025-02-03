@@ -24,7 +24,7 @@ extension TrackSearch on SpotifyEngine {
               album: track.album!.name!,
               sDuration: track.durationMs! ~/ 1000,
               url: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
-              source: Src.spotify,
+              source: TokenSrc.spotify,
             ),
           );
         }
@@ -49,7 +49,7 @@ extension TrackSearch on SpotifyEngine {
       album: track.album!.name!,
       sDuration: track.durationMs! ~/ 1000,
       url: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
-      source: Src.spotify,
+      source: TokenSrc.spotify,
     );
   }
 }
