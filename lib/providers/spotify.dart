@@ -5,7 +5,7 @@ library;
 import 'package:spotify/spotify.dart';
 
 // Project imports:
-import 'package:spotdl_dart_core/provider/common.dart';
+import 'package:spotdl_dart_core/providers/common.dart';
 
 part 'spotify/spotify_result.dart';
 part 'spotify/spotify_engine.dart';

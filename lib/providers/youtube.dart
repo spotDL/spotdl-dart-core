@@ -5,7 +5,7 @@ library;
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 // Project imports:
-import 'package:spotdl_dart_core/provider/common.dart';
+import 'package:spotdl_dart_core/providers/common.dart';
 
-part './youtube/youtube_result.dart';
-part './youtube/youtube_engine.dart';
+part 'youtube/youtube_result.dart';
+part 'youtube/youtube_engine.dart';

@@ -32,7 +32,8 @@ class ApiManager {
     // the compiled executable after application compilation, take this into consideration while
     // writing test code during development.
     var executableDir = File(Platform.resolvedExecutable).parent.path;
-    var file = File(executableDir + (Platform.isWindows ? '\\.apikeys' : '/.apikeys'));
+    var file =
+        File(executableDir + (Platform.isWindows ? '\\.apikeys' : '/.apikeys'));
 
     // If file exists, update _defaultTokens.
     if (file.existsSync()) {
@@ -43,12 +44,14 @@ class ApiManager {
       (jsonDecode(tokenData) as Map<String, dynamic>).forEach(
         (key, value) {
           // String -> Src conversion for easy updating later.
-          var srcToken = Source.values.firstWhere((token) => token.toString() == key);
+          var srcToken =
+              Source.values.firstWhere((token) => token.toString() == key);
 
           (value as Map<String, dynamic>).forEach(
             (key, value) {
               // String -> Part conversion for easy updating later.
-              var partToken = TokenPart.values.firstWhere((token) => token.toString() == key);
+              var partToken = TokenPart.values
+                  .firstWhere((token) => token.toString() == key);
 
               _defaultTokens[srcToken]![partToken] = value as String;
             },

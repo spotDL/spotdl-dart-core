@@ -1,7 +1,7 @@
 include: package:lints/recommended.yaml
 
 formatter:
-  page_width: 105
+  page_width: 100
 
 analyzer:
   plugins:
@@ -19,7 +19,6 @@ linter:
   - require_trailing_commas
   - flutter_style_todos
   - library_annotations
-  - lines_longer_than_80_chars
   - missing_whitespace_between_adjacent_strings
   - prefer_foreach
   - unawaited_futures
