@@ -5,9 +5,10 @@ import 'package:spotdl_dart_core/providers/youtube.dart';
 import 'package:spotdl_dart_core/utils/download.dart';
 
 void main(List<String> args) async {
+  var dl = await DownloadManager.initialize(Platform.numberOfProcessors);
+
   var yt = YoutubeEngine();
   var sp = SpotifyEngine();
-  var dl = await Downloader.initialize();
 
   var input = '';
 
@@ -20,10 +21,14 @@ void main(List<String> args) async {
     } else if (input == '') {
       continue;
     } else {
+      print('[info] Searching for track on Spotify\n');
+
       var spRes = (await sp.searchForTrack(input, 1)).first;
       print(spRes);
 
-      print('\n${'-' * 150}\n');
+      print('\n${'-' * 100}\n');
+
+      print('[info] Searching for track on YouTube\n');
 
       var ytQry = await yt.constructSearchQuery(spRes);
       List<YouTubeResult> ytMatches;
@@ -32,31 +37,39 @@ void main(List<String> args) async {
         try {
           ytMatches = await yt.searchForTrack(ytQry);
           break;
-        } on UnimplementedError {
-          print('rerun [yt_explod_bug]');
+        } on Object {
+          print('[info] Re-attempting Search on YouTube\n');
           continue;
         }
       }
 
+      print('[info] Locating best match by duration\n');
+
       var bestMatch = ytMatches.first;
 
       for (var ytRes in ytMatches) {
-        print('$ytRes\n');
-
         if ((ytRes.sDuration - spRes.sDuration).abs() <
             (bestMatch.sDuration - spRes.sDuration).abs()) {
           bestMatch = ytRes;
         }
       }
 
-      print('-' * 150);
+      print('-' * 100);
       print('$bestMatch\n');
-      print('-' * 150);
+      print('-' * 100);
 
       var fileTitle = '${spRes.artists.join(', ')} - ${spRes.title}';
 
-      await dl.addToDownloadQueue(spRes.artUrl, './$fileTitle.jpg');
-      await dl.addToDownloadQueue(bestMatch.dlUrl!, './$fileTitle.weba');
+      print('[info] Adding albumArt/webaFile to download queue\n');
+
+      await dl
+          .addToDownloadQueue(spRes.artUrl, './$fileTitle.jpg')
+          .then((v) => print('[info] $fileTitle albumArt Downloaded'));
+      await dl
+          .addToDownloadQueue(bestMatch.dlUrl!, './$fileTitle.weba')
+          .then((v) => print('[info] $fileTitle WebaFile Downloaded'));
     }
   }
+
+  dl.shutdown();
 }

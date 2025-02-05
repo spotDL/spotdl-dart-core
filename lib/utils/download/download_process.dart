@@ -1,29 +1,41 @@
 part of '../download.dart';
 
-class Downloader {
+/// Run background downloads in a separate process.
+///
+/// ### Notes
+///
+/// - Process goes like this: `initialize` ---> `_isolateSetup` --event-loop--> `_downloadFile`
+/// --event-loop--> `_isolateSetup` --> `verifyRequestProcessing`.
+class DownloadProcess {
+  /// Port to send data to the spawned Isolate.
   final SendPort _toSpawnedIsolate;
 
+  /// Port to receive data from the spawned Isolate.
   final ReceivePort _fromSpawnedIsolate;
 
+  /// A *ledger* of unprocessed download requests.
   final _activeRequests = <int, Completer<void>>{};
 
+  /// Shutdown code for the spawned Isolate.
   static const _shutdownCode = '5hu†d0wn';
 
+  /// Index for request id.
   int _idIndex = 0;
 
+  /// Flag to check if the spawned Isolate is closed.
   bool _isClosed = false;
 
-  /// Create the "actual" [Downloader] instance, switch from static isolate logic to instance logic
+  /// Create the "actual" [DownloadProcess] instance, switch from static isolate logic to instance logic
   /// for processing verification.
-  Downloader._(this._toSpawnedIsolate, this._fromSpawnedIsolate) {
+  DownloadProcess._(this._toSpawnedIsolate, this._fromSpawnedIsolate) {
     var _ = _fromSpawnedIsolate.listen(_verifyRequestProcessing);
   }
 
-  /// Create a [Downloader] instance.
+  /// Create a [DownloadProcess] instance.
   ///
   /// ### Note
   /// - We do this in a static method as constructors can't be async.
-  static Future<Downloader> initialize() async {
+  static Future<DownloadProcess> initialize() async {
     // Completer as lock to ensure that the spawned Isolate's SendPort is not used before it's
     // exchanged with the main Isolate.
     //
@@ -71,14 +83,17 @@ class Downloader {
     final (ReceivePort fromIsolatePort, SendPort toIsolatePort) = await connectionLock.future;
 
     // Create a Downloader instance and return it.
-    return Downloader._(toIsolatePort, fromIsolatePort);
+    return DownloadProcess._(toIsolatePort, fromIsolatePort);
   }
 
   /// Add a url to the download queue.
   ///
+  /// ### Returns
+  /// - A [Completer] that completes when the download is done.
+  ///
   /// ### Note
   /// - Operates on the Main Isolate
-  Future<void> addToDownloadQueue(String url, String filePath) async {
+  Future<Completer<void>> addToDownloadQueue(String url, String filePath) async {
     // If Spawned Isolate is closed, throw an error.
     if (_isClosed) {
       throw StateError('Downloader is closed');
@@ -93,8 +108,7 @@ class Downloader {
     _activeRequests[id] = activeRequestsLock;
     _toSpawnedIsolate.send((id, url, filePath));
 
-    // NOTE: Prevents application from exiting before the request is processed.
-    var _ = await activeRequestsLock.future;
+    return activeRequestsLock;
   }
 
   /// Shuts down the Downloader.
@@ -130,7 +144,7 @@ class Downloader {
     // Spawned Isolate event-loop.
     var _ = fromMainIsolate.listen((message) {
       // Shutdown handling.
-      if (message == Downloader._shutdownCode) {
+      if (message == DownloadProcess._shutdownCode) {
         httpClient.close();
         fromMainIsolate.close();
 
@@ -163,21 +177,41 @@ class Downloader {
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
 
+    // Buffer and write data to file.
+    // NOTE: 1024 * 1024 = 1MB, BufferSize is 3MB. We use a custom buffer as the default is ~8kB,
+    // 8kB requires way too many write calls.
+    var bufferSize = 1 * 1024 * 1024;
+    var cBufferSize = 0;
+    var buffer = <List<int>>[];
+
     // Streaming the response to file.
+
     if (response.statusCode == HttpStatus.ok) {
       var file = File(filePath);
       var fileSink = file.openWrite();
 
-      // ignore: avoid-dynamic, _throwaway variable to prevent avoid-ignoring-return-values.
-      dynamic _ = response.listen(
-        (data) {
-          fileSink.add(data);
-        },
-        onDone: () {
-          // ignore: prefer-async-await, converting async code to sync for onDone callback.
-          fileSink.close().then((value) => null);
-        },
-      );
+      await for (var chunk in response) {
+        cBufferSize += chunk.length;
+        buffer.add(chunk);
+
+        if (cBufferSize >= bufferSize) {
+          // Consolidate chunks & write to file.
+          var expandedBuffer = buffer.expand((e) => e).toList();
+          fileSink.add(expandedBuffer);
+
+          // Reset buffer.
+          buffer.clear();
+          cBufferSize = 0;
+        }
+      }
+
+      // Consolidate chunks & write any leftover data in buffer to file.
+      var expandedBuffer = buffer.expand((e) => e).toList();
+      fileSink.add(expandedBuffer);
+
+      // Cleanup.
+      var _ = await fileSink.flush();
+      _ = await fileSink.close();
     }
   }
 

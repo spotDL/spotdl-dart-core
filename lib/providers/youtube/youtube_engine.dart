@@ -14,8 +14,10 @@ class YoutubeEngine extends SrcEngine {
 
   /// Searches YouTube for the given query.
   @override
-  Future<List<YouTubeResult>> searchForTrack(String query,
-      [itemCount = 5]) async {
+  Future<List<YouTubeResult>> searchForTrack(
+    String query, [
+    itemCount = 5,
+  ]) async {
     var searchResults = await _youtubeEngine.search.search(query);
 
     var results = <YouTubeResult>[];
@@ -56,22 +58,16 @@ class YoutubeEngine extends SrcEngine {
       // "\n\n" even if youtube has the newlines in it's rendering.
       String? album;
 
-      if (searchResults.first.description
-          .startsWith('Provided to YouTube by ')) {
+      if (searchResults.first.description.startsWith('Provided to YouTube by ')) {
         try {
-          album = searchResults.first.description
-              .split(mainArtist)[1]
-              .split('℗')
-              .first
-              .trim();
+          album = searchResults.first.description.split(mainArtist)[1].split('℗').first.trim();
         } catch (_) {
           album = null;
         }
       }
 
       // Extract highest bitrate audio stream URL.
-      var streamManifest = await _youtubeEngine.videos.streams
-          .getManifest(searchResults.first.id);
+      var streamManifest = await _youtubeEngine.videos.streams.getManifest(searchResults.first.id);
       var dlUrl = streamManifest.audioOnly.withHighestBitrate().url.toString();
 
       // Add the search result to the list.
