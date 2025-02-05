@@ -7,10 +7,12 @@ extension PlaylistSearch on SpotifyEngine {
   /// ### Note
   /// - Same as results on the playlist tab, but excluding the user's own playlists. Best for
   /// Spotify-owned playlists.
-  Future<List<Playlist>> searchForPlaylist(String query,
-      [int itemCount = 5]) async {
-    var resultPages = await _spotifyEngine.search
-        .get(query, types: [SearchType.playlist]).first(itemCount);
+  Future<List<Playlist>> searchForPlaylist(
+    String query, [
+    int itemCount = 5,
+  ]) async {
+    var resultPages =
+        await _spotifyEngine.search.get(query, types: [SearchType.playlist]).first(itemCount);
 
     var results = <Playlist>[];
 
@@ -43,9 +45,8 @@ extension PlaylistSearch on SpotifyEngine {
   ///
   /// - The URL needn't be *cleaned* before passing it to this function.
   Future<List<Playlist>> getUserPlaylists(String url) async {
-    var userPlaylists = await _spotifyEngine.playlists
-        .getUsersPlaylists(SpotifyEngine.extractId(url))
-        .all();
+    var userPlaylists =
+        await _spotifyEngine.playlists.getUsersPlaylists(SpotifyEngine.extractId(url)).all();
 
     return userPlaylists
         .map(
@@ -60,8 +61,7 @@ extension PlaylistSearch on SpotifyEngine {
 
   /// Get the playlists from a Spotify Playlist URL / URI.
   Future<Playlist> getPlaylistFromPlaylistUrl(String url) async {
-    var playlist =
-        await _spotifyEngine.playlists.get(SpotifyEngine.extractId(url));
+    var playlist = await _spotifyEngine.playlists.get(SpotifyEngine.extractId(url));
 
     return Playlist(
       name: playlist.name!,

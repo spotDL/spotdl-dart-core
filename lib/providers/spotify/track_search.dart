@@ -16,6 +16,7 @@ extension TrackSearch on SpotifyEngine {
       album: track.album!.name!,
       sDuration: track.durationMs! ~/ 1000,
       srcUrl: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
+      artUrl: track.album!.images!.first.url!,
       source: Source.spotify,
       diskNumber: track.discNumber!,
       trackNumber: track.trackNumber!,
@@ -26,8 +27,7 @@ extension TrackSearch on SpotifyEngine {
   Future<List<SpotifyResult>> getTracksFromAlbumUrl(String url) async {
     var results = <SpotifyResult>[];
 
-    var tracks =
-        await _spotifyEngine.albums.tracks(SpotifyEngine.extractId(url)).all();
+    var tracks = await _spotifyEngine.albums.tracks(SpotifyEngine.extractId(url)).all();
     var album = await _spotifyEngine.albums.get(SpotifyEngine.extractId(url));
 
     for (var track in tracks) {
@@ -37,8 +37,8 @@ extension TrackSearch on SpotifyEngine {
           title: track.name!,
           album: album.name!,
           sDuration: track.durationMs! ~/ 1000,
-          srcUrl:
-              'https://open.spotify.com/track/${track.uri!.split(':').last}',
+          srcUrl: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
+          artUrl: album.images!.first.url!,
           source: Source.spotify,
           diskNumber: track.discNumber!,
           trackNumber: track.trackNumber!,
@@ -56,9 +56,8 @@ extension TrackSearch on SpotifyEngine {
   Future<List<SpotifyResult>> getTracksFromPlaylistUrl(String url) async {
     var results = <SpotifyResult>[];
 
-    var tracks = await _spotifyEngine.playlists
-        .getTracksByPlaylistId(SpotifyEngine.extractId(url))
-        .all();
+    var tracks =
+        await _spotifyEngine.playlists.getTracksByPlaylistId(SpotifyEngine.extractId(url)).all();
 
     for (var track in tracks) {
       results.add(
@@ -67,8 +66,8 @@ extension TrackSearch on SpotifyEngine {
           title: track.name!,
           album: track.album!.name!,
           sDuration: track.durationMs! ~/ 1000,
-          srcUrl:
-              'https://open.spotify.com/track/${track.uri!.split(':').last}',
+          srcUrl: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
+          artUrl: track.album!.images!.first.url!,
           source: Source.spotify,
           diskNumber: track.discNumber!,
           trackNumber: track.trackNumber!,

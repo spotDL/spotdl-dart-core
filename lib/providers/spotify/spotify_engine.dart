@@ -31,10 +31,9 @@ class SpotifyEngine extends SrcEngine {
   // NOTE: This should be in the [TrackSearch] extension, but is implemented here to keep in line
   // with the [SrcEngine] interface.
   @override
-  Future<List<SpotifyResult>> searchForTrack(String query,
-      [int itemCount = 5]) async {
-    var resultPages = await _spotifyEngine.search
-        .get(query, types: [SearchType.track]).first(itemCount);
+  Future<List<SpotifyResult>> searchForTrack(String query, [int itemCount = 5]) async {
+    var resultPages =
+        await _spotifyEngine.search.get(query, types: [SearchType.track]).first(itemCount);
 
     var results = <SpotifyResult>[];
 
@@ -53,8 +52,8 @@ class SpotifyEngine extends SrcEngine {
               title: track.name!,
               album: track.album!.name!,
               sDuration: track.durationMs! ~/ 1000,
-              srcUrl:
-                  'https://open.spotify.com/track/${track.uri!.split(':').last}',
+              srcUrl: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
+              artUrl: track.album!.images!.first.url!,
               source: Source.spotify,
               diskNumber: track.discNumber!,
               trackNumber: track.trackNumber!,

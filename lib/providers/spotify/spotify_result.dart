@@ -26,6 +26,9 @@ class SpotifyResult extends Result {
   @override
   final String? dlUrl = null;
 
+  /// The URL to the album art.
+  final String artUrl;
+
   @override
   final Source source;
 
@@ -42,6 +45,7 @@ class SpotifyResult extends Result {
     required this.album,
     required this.sDuration,
     required this.srcUrl,
+    required this.artUrl,
     required this.source,
     required this.diskNumber,
     required this.trackNumber,
