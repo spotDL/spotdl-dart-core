@@ -32,6 +32,8 @@ linter:
 dart_code_metrics:
   rules:
     # General
+    - prefer-commenting-analyzer-ignores:
+        ignore-global: false
     - arguments-ordering
     - avoid-collection-methods-with-unrelated-types
     - avoid-dynamic
