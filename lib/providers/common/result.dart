@@ -9,6 +9,9 @@ abstract class Result {
   String get title;
 
   /// Album of the song.
+  ///
+  /// ### Note
+  /// - Nullable because most sources may not consistently provide this information.
   String? get album;
 
   /// Duration of the song in seconds.
@@ -18,6 +21,9 @@ abstract class Result {
   String get srcUrl;
 
   /// URL to a downloadable stream from the given source.
+  ///
+  /// ### Note
+  /// - Nullable because some sources can't be used to download songs.
   String? get dlUrl;
 
   /// [Source] of the song.

@@ -1,7 +1,7 @@
 part of '../spotify.dart';
 
 /// Search & Utility functions for searching Spotify.
-class SpotifyEngine extends SrcEngine {
+class SpotifyEngine extends SearchEngine {
   @override
   final source = Source.spotify;
 
@@ -20,11 +20,6 @@ class SpotifyEngine extends SrcEngine {
   /// Extract the URI from a Spotify URL.
   static String extractId(String url) {
     return url.split('/').last.split('?si=').first;
-  }
-
-  @override
-  Future<String> constructSearchQuery(Result result) async {
-    return '${result.title}, ${result.album ?? ''},${result.artists.join(', ')}';
   }
 
   /// Searches for tracks on Spotify.
@@ -64,5 +59,45 @@ class SpotifyEngine extends SrcEngine {
     }
 
     return results;
+  }
+
+  @override
+  Future<List<SpotifyResult>> searchForTrackFromResult(
+    Result result, [
+    int itemCount = 5,
+    int durationDelta = 15,
+    double commonArtistThreshold = 0.5,
+    bool albumMatchRequired = false,
+  ]) async {
+    var searchQuery = await constructSearchQuery(result);
+    var results = await searchForTrack(searchQuery, itemCount);
+
+    var filteredResults = <SpotifyResult>[];
+
+    for (var spotifyResult in results) {
+      // Filter out results with more than durationDelta seconds difference.
+      if ((spotifyResult.sDuration - result.sDuration).abs() >= durationDelta) {
+        continue;
+      }
+
+      // Filter out results with less than commonArtistThreshold common artists.
+      var resultArtists = result.artists.map((artist) => artist.toLowerCase());
+      var spotifyArtists = spotifyResult.artists.map((sArtist) => sArtist.toLowerCase());
+      var commonArtists = resultArtists.where((artist) => spotifyArtists.contains(artist));
+
+      if (commonArtists.length < (resultArtists.length * commonArtistThreshold).round()) {
+        continue;
+      }
+
+      // Album Match depending on input parameters.
+      if (spotifyResult.album.toLowerCase() != result.album!.toLowerCase() && albumMatchRequired) {
+        continue;
+      }
+
+      // If a result passes all filters, add to filtered results.
+      filteredResults.add(spotifyResult);
+    }
+
+    return filteredResults;
   }
 }

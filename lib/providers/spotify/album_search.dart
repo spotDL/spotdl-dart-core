@@ -1,10 +1,11 @@
 part of '../spotify.dart';
 
+/// Extension on [SpotifyEngine] to search for albums.
 extension AlbumSearch on SpotifyEngine {
   /// Search for albums on Spotify.
   Future<List<Album>> searchForAlbum(String query, [int itemCount = 5]) async {
-    var resultPages = await _spotifyEngine.search
-        .get(query, types: [SearchType.album]).first(itemCount);
+    var resultPages =
+        await _spotifyEngine.search.get(query, types: [SearchType.album]).first(itemCount);
 
     var results = <Album>[];
 
@@ -66,6 +67,5 @@ class Album {
   });
 
   @override
-  String toString() =>
-      'Album: $name by $artist\n\turl: $albumUrl\n\tart: $artUrl';
+  String toString() => 'Album: $name by $artist\n\turl: $albumUrl\n\tart: $artUrl';
 }

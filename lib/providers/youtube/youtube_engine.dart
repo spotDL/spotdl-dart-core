@@ -1,7 +1,7 @@
 part of '../youtube.dart';
 
 /// Search & Utility functions for YouTube.
-class YoutubeEngine extends SrcEngine {
+class YoutubeEngine extends SearchEngine {
   @override
   final source = Source.youtube;
 
@@ -102,7 +102,27 @@ class YoutubeEngine extends SrcEngine {
   }
 
   @override
-  Future<String> constructSearchQuery(Result result) async {
-    return '${result.title} by ${result.artists.join(', ')} from ${result.album ?? ''}';
+
+  /// Superior search function for YouTube.
+  ///
+  /// ### Note
+  /// - Minimal effort is put into this function. Prefer using [YoutubeMusicEngine].
+  Future<List<YouTubeResult>> searchForTrackFromResult(
+    Result result, [
+    int itemCount = 5,
+    int durationDelta = 15,
+  ]) async {
+    var searchQuery = await constructSearchQuery(result);
+    var results = await searchForTrack(searchQuery, itemCount);
+
+    var filteredResults = <YouTubeResult>[];
+
+    for (var ytResult in results) {
+      if ((ytResult.sDuration - result.sDuration).abs() <= durationDelta) {
+        filteredResults.add(ytResult);
+      }
+    }
+
+    return filteredResults;
   }
 }

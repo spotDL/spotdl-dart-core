@@ -18,7 +18,7 @@ class YouTubeResult extends Result {
   final String srcUrl;
 
   @override
-  final String? dlUrl;
+  final String dlUrl;
 
   @override
   final Source source;

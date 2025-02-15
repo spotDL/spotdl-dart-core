@@ -7,6 +7,7 @@ part of '../spotify.dart';
 /// - As Spotify is the *Source of Truth*, [SpotifyResult] has the following extra fields:
 ///   - [diskNumber]
 ///   - [trackNumber]
+///   - [artUrl]
 class SpotifyResult extends Result {
   @override
   final List<String> artists;
