@@ -1,20 +1,24 @@
 import 'dart:io';
 
 import 'package:spotdl_dart_core/providers/spotify.dart';
-import 'package:spotdl_dart_core/providers/youtube.dart';
+import 'package:spotdl_dart_core/providers/youtube_music.dart';
 import 'package:spotdl_dart_core/utils/download.dart';
 
 void main(List<String> args) async {
   var dl = await DownloadManager.initialize(Platform.numberOfProcessors);
+  // var dl = await DownloadManager.initialize(4);
 
-  var yt = YoutubeEngine();
+  var yt = await YoutubeMusicEngine.create();
   var sp = SpotifyEngine();
 
   var input = '';
 
+  // var queries = ['ynir danheim', 'exit'];
+
   while (input != 'exit') {
     stdout.write('query: ');
     input = stdin.readLineSync() ?? '';
+    // input = queries.removeAt(0);
 
     if (input == 'exit') {
       break;
@@ -28,19 +32,15 @@ void main(List<String> args) async {
 
       print('\n${'-' * 100}\n');
 
-      print('[info] Searching for track on YouTube\n');
+      print('[info] Searching for track on YouTubeMusic\n');
 
-      var ytQry = await yt.constructSearchQuery(spRes);
-      List<YouTubeResult> ytMatches;
+      List<YoutubeMusicResult> ytMatches;
 
-      while (true) {
-        try {
-          ytMatches = await yt.searchForTrack(ytQry);
-          break;
-        } on Object {
-          print('[info] Re-attempting Search on YouTube\n');
-          continue;
-        }
+      ytMatches = await yt.searchForTrackFromResult(spRes);
+
+      if (ytMatches.isEmpty) {
+        print('[info] No matches found on YouTubeMusic\n');
+        continue;
       }
 
       print('[info] Locating best match by duration\n');
@@ -62,12 +62,11 @@ void main(List<String> args) async {
 
       print('[info] Adding albumArt/webaFile to download queue\n');
 
-      await dl
-          .addToDownloadQueue(spRes.artUrl, './$fileTitle.jpg')
-          .then((v) => print('[info] $fileTitle albumArt Downloaded'));
-      await dl
-          .addToDownloadQueue(bestMatch.dlUrl!, './$fileTitle.weba')
-          .then((v) => print('[info] $fileTitle WebaFile Downloaded'));
+      var artCompleter = await dl.addToDownloadQueue(spRes.artUrl, './$fileTitle.jpg');
+      var soundCompleter = await dl.addToDownloadQueue(bestMatch.dlUrl, './$fileTitle.weba');
+
+      artCompleter.future.then((v) => print('[info] $fileTitle albumArt Downloaded]\n'));
+      soundCompleter.future.then((v) => print('[info] $fileTitle WebaFile Downloaded]\n'));
     }
   }
 

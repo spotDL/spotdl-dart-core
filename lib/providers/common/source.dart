@@ -6,5 +6,8 @@ enum Source {
   spotify,
 
   /// YouTube.
-  youtube
+  youtube,
+
+  /// YouTube Music.
+  youtubeMusic
 }
