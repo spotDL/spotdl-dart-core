@@ -1,7 +1,13 @@
+import 'dart:async';
+
+import 'package:spotdl_dart_core/providers/spotify.dart';
 import 'package:spotdl_dart_core/providers/youtube.dart';
+import 'package:spotdl_dart_core/utils.dart';
 
 void main(List<String> args) async {
+  var spS = SpotifyEngine();
   var ytS = YoutubeEngine();
+  var dlM = await DownloadManager.boot();
 
   for (var query in [
     'Remember The Name Song',
@@ -27,6 +33,22 @@ void main(List<String> args) async {
     'Happy Song',
     'All About That Bass Song',
   ]) {
-    await ytS.searchForTrack(query).then((resultList) => resultList.forEach(print));
+    unawaited(
+      spS.searchForTrack(query).then(
+        (resultList) {
+          ytS.searchForTrackFromResult(resultList.first).then(
+            (resultList) {
+              dlM.process(resultList.first).then(
+                (successState) {
+                  print(
+                    '[$successState] ${resultList.first.title} by ${resultList.first.artists.join(', ')}',
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }

@@ -36,6 +36,7 @@ class YoutubeMusicResult extends Result {
   final Source source;
 
   /// Art URL of the track.
+  @override
   final String artUrl;
 
   /// Creates a new [YoutubeMusicResult].

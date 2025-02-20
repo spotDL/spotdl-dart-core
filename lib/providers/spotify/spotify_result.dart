@@ -28,6 +28,7 @@ class SpotifyResult extends Result {
   final String dlUrl = '';
 
   /// The URL to the album art.
+  @override
   final String artUrl;
 
   @override
