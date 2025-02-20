@@ -1,7 +1,7 @@
 part of '../spotify.dart';
 
 /// Search & Utility functions for searching Spotify.
-class SpotifyEngine extends SearchEngine {
+class SpotifyEngine implements SearchEngine {
   @override
   final source = Source.spotify;
 
@@ -99,5 +99,10 @@ class SpotifyEngine extends SearchEngine {
     }
 
     return filteredResults;
+  }
+
+  @override
+  Future<String> constructSearchQuery(Result result) async {
+    return '${result.title} by ${result.artists.join(', ')} from "${result.album ?? ''}"';
   }
 }

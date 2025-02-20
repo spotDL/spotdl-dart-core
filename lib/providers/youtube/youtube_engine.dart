@@ -1,7 +1,7 @@
 part of '../youtube.dart';
 
 /// Search & Utility functions for YouTube.
-class YoutubeEngine extends SearchEngine {
+class YoutubeEngine implements SearchEngine {
   @override
   final source = Source.youtube;
 
@@ -124,5 +124,10 @@ class YoutubeEngine extends SearchEngine {
     }
 
     return filteredResults;
+  }
+
+  @override
+  Future<String> constructSearchQuery(Result result) async {
+    return '${result.title} by ${result.artists.join(', ')} from "${result.album ?? ''}"';
   }
 }

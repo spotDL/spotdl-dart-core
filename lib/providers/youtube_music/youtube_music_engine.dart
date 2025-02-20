@@ -1,7 +1,7 @@
 part of '../youtube_music.dart';
 
 /// Search engine for YouTube Music.
-class YoutubeMusicEngine extends SearchEngine {
+class YoutubeMusicEngine implements SearchEngine {
   /// The underlying [YTMusic] instance.
   late final YTMusic _ytMusicEngine;
 
@@ -23,7 +23,7 @@ class YoutubeMusicEngine extends SearchEngine {
 
   @override
   Future<String> constructSearchQuery(Result result) async {
-    return '${result.title} by ${result.artists.join(', ')} from "${result.album}"';
+    return '${result.title} by ${result.artists.join(', ')} from "${result.album ?? ''}"';
   }
 
   @override
