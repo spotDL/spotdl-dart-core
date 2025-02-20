@@ -1,6 +1,8 @@
+// Dart imports:
+import 'dart:async';
+
 // Package imports:
 import 'package:dart_ytmusic_api/dart_ytmusic_api.dart';
-import 'package:dart_ytmusic_api/yt_music.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 // Project imports:

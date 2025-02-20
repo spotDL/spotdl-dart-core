@@ -23,7 +23,7 @@ class YoutubeMusicEngine implements SearchEngine {
 
   @override
   Future<String> constructSearchQuery(Result result) async {
-    return '${result.title} by ${result.artists.join(', ')} from "${result.album ?? ''}"';
+    return '${result.title} by ${result.artists.join(', ')} from "${result.album}"';
   }
 
   @override
@@ -32,24 +32,39 @@ class YoutubeMusicEngine implements SearchEngine {
 
     var returnList = <YoutubeMusicResult>[];
 
+    // Proactively track the number of results as async is kinda slow ~1s.
+    var resultCount = 0;
+    var exitLock = Completer<void>.sync();
+
     for (var result in results) {
-      var dataManifest = await _ytExplode.videos.streamsClient.getManifest(result.videoId);
-      var dlUrl = dataManifest.audioOnly.withHighestBitrate().url.toString();
+      if (resultCount++ > itemCount) {
+        break;
+      }
 
-      var highestResThumbnail =
-          result.thumbnails.reduce((a, b) => a.width * a.height > b.width * b.height ? a : b);
+      unawaited(
+        _ytExplode.videos.streamsClient.getManifest(result.videoId).then((dataManifest) {
+          var dlUrl = dataManifest.audioOnly.withHighestBitrate().url.toString();
 
-      returnList.add(
-        YoutubeMusicResult(
-          title: result.name,
-          artists: [result.artist.name],
-          album: result.album?.name,
-          srcUrl: 'https://music.youtube.com/watch?v=${result.videoId}',
-          dlUrl: dlUrl,
-          sDuration: result.duration!,
-          source: Source.youtubeMusic,
-          artUrl: highestResThumbnail.url,
-        ),
+          var highestResThumbnail =
+              result.thumbnails.reduce((a, b) => a.width * a.height > b.width * b.height ? a : b);
+
+          returnList.add(
+            YoutubeMusicResult(
+              title: result.name,
+              artists: [result.artist.name],
+              album: result.album?.name ?? '',
+              srcUrl: 'https://music.youtube.com/watch?v=${result.videoId}',
+              dlUrl: dlUrl,
+              sDuration: result.duration!,
+              source: Source.youtubeMusic,
+              artUrl: highestResThumbnail.url,
+            ),
+          );
+
+          if (returnList.length >= itemCount) {
+            exitLock.complete();
+          }
+        }),
       );
     }
 
@@ -65,40 +80,38 @@ class YoutubeMusicEngine implements SearchEngine {
   ]) async {
     var results = <YoutubeMusicResult>[];
 
-    if (result.album != null) {
-      var albumResults = await _ytMusicEngine.searchAlbums(result.album!);
+    var albumResults = await _ytMusicEngine.searchAlbums(result.album);
 
-      AlbumDetailed? matchingAlbumResult;
+    AlbumDetailed? matchingAlbumResult;
 
-      for (var album in albumResults) {
-        if (album.name == result.album) {
-          matchingAlbumResult = album;
-          break;
-        }
+    for (var album in albumResults) {
+      if (album.name == result.album) {
+        matchingAlbumResult = album;
+        break;
       }
+    }
 
-      if (matchingAlbumResult != null) {
-        var albumSongs =
-            await _ytExplode.playlists.getVideos(matchingAlbumResult.playlistId).toList();
+    if (matchingAlbumResult != null) {
+      var albumSongs =
+          await _ytExplode.playlists.getVideos(matchingAlbumResult.playlistId).toList();
 
-        for (var song in albumSongs) {
-          var dataManifest = await _ytExplode.videos.streamsClient.getManifest(song.id);
-          var dlUrl = dataManifest.audioOnly.withHighestBitrate().url.toString();
+      for (var song in albumSongs) {
+        var dataManifest = await _ytExplode.videos.streamsClient.getManifest(song.id);
+        var dlUrl = dataManifest.audioOnly.withHighestBitrate().url.toString();
 
-          // Add the search result to the list.
-          results.add(
-            YoutubeMusicResult(
-              artists: [song.author.split(' - Topic').first],
-              title: song.title,
-              album: matchingAlbumResult.name,
-              sDuration: song.duration!.inSeconds,
-              srcUrl: song.url,
-              dlUrl: dlUrl,
-              source: Source.youtube,
-              artUrl: song.thumbnails.highResUrl,
-            ),
-          );
-        }
+        // Add the search result to the list.
+        results.add(
+          YoutubeMusicResult(
+            artists: [song.author.split(' - Topic').first],
+            title: song.title,
+            album: matchingAlbumResult.name,
+            sDuration: song.duration?.inSeconds ?? 0,
+            srcUrl: song.url,
+            dlUrl: dlUrl,
+            source: Source.youtube,
+            artUrl: song.thumbnails.highResUrl,
+          ),
+        );
       }
     }
 
@@ -126,7 +139,7 @@ class YoutubeMusicEngine implements SearchEngine {
       }
 
       // If album match is required, filter out results with different album.
-      if (albumMatchRequired && (ytmResult.album == null || ytmResult.album != result.album)) {
+      if (albumMatchRequired && (ytmResult.album != result.album)) {
         continue;
       }
 

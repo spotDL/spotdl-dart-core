@@ -53,7 +53,6 @@ dart_code_metrics:
     - no-magic-number:
         allowed: [360]
         allow-only-once: true
-    - prefer-async-await
     - prefer-commenting-analyzer-ignores
     - prefer-conditional-expressions
     - refer-correct-identifier-length:

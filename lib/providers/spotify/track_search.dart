@@ -11,15 +11,15 @@ extension TrackSearch on SpotifyEngine {
     var track = await _spotifyEngine.tracks.get(SpotifyEngine.extractId(url));
 
     return SpotifyResult(
-      artists: track.artists!.map((artist) => artist.name!).toList(),
-      title: track.name!,
-      album: track.album!.name!,
+      artists: track.artists?.map((artist) => artist.name!).toList() ?? [],
+      title: track.name ?? '',
+      album: track.album?.name ?? '',
       sDuration: track.durationMs! ~/ 1000,
-      srcUrl: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
-      artUrl: track.album!.images!.first.url!,
+      srcUrl: 'https://open.spotify.com/track/${track.uri?.split(':').last}',
+      artUrl: track.album?.images?.first.url ?? '',
       source: Source.spotify,
-      diskNumber: track.discNumber!,
-      trackNumber: track.trackNumber!,
+      diskNumber: track.discNumber ?? 0,
+      trackNumber: track.trackNumber ?? 0,
     );
   }
 
@@ -33,15 +33,15 @@ extension TrackSearch on SpotifyEngine {
     for (var track in tracks) {
       results.add(
         SpotifyResult(
-          artists: track.artists!.map((artist) => artist.name!).toList(),
-          title: track.name!,
-          album: album.name!,
+          artists: track.artists?.map((artist) => artist.name!).toList() ?? [],
+          title: track.name ?? '',
+          album: album.name ?? '',
           sDuration: track.durationMs! ~/ 1000,
-          srcUrl: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
-          artUrl: album.images!.first.url!,
+          srcUrl: 'https://open.spotify.com/track/${track.uri?.split(':').last}',
+          artUrl: album.images?.first.url ?? '',
           source: Source.spotify,
-          diskNumber: track.discNumber!,
-          trackNumber: track.trackNumber!,
+          diskNumber: track.discNumber ?? 0,
+          trackNumber: track.trackNumber ?? 0,
         ),
       );
     }
@@ -62,15 +62,15 @@ extension TrackSearch on SpotifyEngine {
     for (var track in tracks) {
       results.add(
         SpotifyResult(
-          artists: track.artists!.map((artist) => artist.name!).toList(),
-          title: track.name!,
-          album: track.album!.name!,
+          artists: track.artists?.map((artist) => artist.name!).toList() ?? [],
+          title: track.name ?? '',
+          album: track.album?.name ?? '',
           sDuration: track.durationMs! ~/ 1000,
-          srcUrl: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
-          artUrl: track.album!.images!.first.url!,
+          srcUrl: 'https://open.spotify.com/track/${track.uri?.split(':').last}',
+          artUrl: track.album?.images?.first.url ?? '',
           source: Source.spotify,
-          diskNumber: track.discNumber!,
-          trackNumber: track.trackNumber!,
+          diskNumber: track.discNumber ?? 0,
+          trackNumber: track.trackNumber ?? 0,
         ),
       );
     }

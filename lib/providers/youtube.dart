@@ -1,6 +1,9 @@
 /// Search & Utility functions for searching YouTube.
 library;
 
+// Dart imports:
+import 'dart:async';
+
 // Package imports:
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 

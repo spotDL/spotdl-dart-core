@@ -9,7 +9,7 @@ class YouTubeResult extends Result {
   final String title;
 
   @override
-  final String? album;
+  final String album;
 
   @override
   final int sDuration;
@@ -19,6 +19,9 @@ class YouTubeResult extends Result {
 
   @override
   final String dlUrl;
+
+  @override
+  final String artUrl;
 
   @override
   final Source source;
@@ -31,6 +34,7 @@ class YouTubeResult extends Result {
     required this.sDuration,
     required this.srcUrl,
     required this.dlUrl,
+    required this.artUrl,
     required this.source,
   });
 }

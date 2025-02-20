@@ -43,15 +43,15 @@ class SpotifyEngine implements SearchEngine {
           // but `Artist?`. I assume that it will always be non-null, so I'm using `!` to access.
           results.add(
             SpotifyResult(
-              artists: track.artists!.map((artist) => artist.name!).toList(),
-              title: track.name!,
-              album: track.album!.name!,
+              artists: track.artists?.map((artist) => artist.name!).toList() ?? [],
+              title: track.name ?? '',
+              album: track.album?.name ?? '',
               sDuration: track.durationMs! ~/ 1000,
-              srcUrl: 'https://open.spotify.com/track/${track.uri!.split(':').last}',
-              artUrl: track.album!.images!.first.url!,
+              srcUrl: 'https://open.spotify.com/track/${track.uri?.split(':').last}',
+              artUrl: track.album?.images?.first.url ?? '',
               source: Source.spotify,
-              diskNumber: track.discNumber!,
-              trackNumber: track.trackNumber!,
+              diskNumber: track.discNumber ?? 0,
+              trackNumber: track.trackNumber ?? 0,
             ),
           );
         }
@@ -90,7 +90,7 @@ class SpotifyEngine implements SearchEngine {
       }
 
       // Album Match depending on input parameters.
-      if (spotifyResult.album.toLowerCase() != result.album!.toLowerCase() && albumMatchRequired) {
+      if (spotifyResult.album.toLowerCase() != result.album.toLowerCase() && albumMatchRequired) {
         continue;
       }
 
@@ -103,6 +103,6 @@ class SpotifyEngine implements SearchEngine {
 
   @override
   Future<String> constructSearchQuery(Result result) async {
-    return '${result.title} by ${result.artists.join(', ')} from "${result.album ?? ''}"';
+    return '${result.title} by ${result.artists.join(', ')} from "${result.album}"';
   }
 }

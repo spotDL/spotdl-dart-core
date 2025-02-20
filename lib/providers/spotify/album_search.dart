@@ -19,9 +19,9 @@ extension AlbumSearch on SpotifyEngine {
           results.add(
             Album(
               name: album.name!,
-              artist: album.artists!.first.name!,
+              artist: album.artists?.first.name ?? '',
               albumUrl: 'https://open.spotify.com/album/${album.id!}',
-              artUrl: album.images!.first.url!,
+              artUrl: album.images?.first.url ?? '',
             ),
           );
         }
@@ -37,9 +37,9 @@ extension AlbumSearch on SpotifyEngine {
 
     return Album(
       name: album.name!,
-      artist: album.artists!.first.name!,
+      artist: album.artists?.first.name ?? '',
       albumUrl: 'https://open.spotify.com/album/${album.id!}',
-      artUrl: album.images!.first.url!,
+      artUrl: album.images?.first.url ?? '',
     );
   }
 }
@@ -57,6 +57,12 @@ class Album {
 
   /// The URL of the album art.
   final String artUrl;
+
+  /// Weave the album has artists.
+  bool get hasArtist => artist.isNotEmpty;
+
+  /// Whether the album has an album art.
+  bool get hasArtUrl => artUrl.isNotEmpty;
 
   /// Creates a new [Album].
   Album({

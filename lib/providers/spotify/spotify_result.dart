@@ -25,7 +25,7 @@ class SpotifyResult extends Result {
   final String srcUrl;
 
   @override
-  final String? dlUrl = null;
+  final String dlUrl = '';
 
   /// The URL to the album art.
   final String artUrl;
@@ -38,6 +38,12 @@ class SpotifyResult extends Result {
 
   /// The track number of the album disk.
   final int trackNumber;
+
+  /// Track has disk number.
+  bool get hasDiskNumber => diskNumber > 1;
+
+  /// Track has track number.
+  bool get hasTrackNumber => trackNumber > 1;
 
   /// Creates a new [SpotifyResult].
   SpotifyResult({

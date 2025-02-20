@@ -17,7 +17,7 @@ class YoutubeMusicResult extends Result {
 
   /// Album of the track.
   @override
-  final String? album;
+  final String album;
 
   /// Source URL of the track.
   @override
