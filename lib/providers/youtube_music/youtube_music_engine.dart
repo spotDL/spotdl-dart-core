@@ -14,7 +14,7 @@ class YoutubeMusicEngine extends SearchEngine {
   YoutubeMusicEngine._(this._ytMusicEngine);
 
   /// Creates a new [YoutubeMusicEngine].
-  static Future<YoutubeMusicEngine> create() async {
+  static Future<YoutubeMusicEngine> initialize() async {
     final ytmusic = YTMusic();
     var _ = await ytmusic.initialize();
 
@@ -88,14 +88,15 @@ class YoutubeMusicEngine extends SearchEngine {
           // Add the search result to the list.
           results.add(
             YoutubeMusicResult(
-                artists: [song.author.split(' - Topic').first],
-                title: song.title,
-                album: matchingAlbumResult.name,
-                sDuration: song.duration!.inSeconds,
-                srcUrl: song.url,
-                dlUrl: dlUrl,
-                source: Source.youtube,
-                artUrl: song.thumbnails.highResUrl),
+              artists: [song.author.split(' - Topic').first],
+              title: song.title,
+              album: matchingAlbumResult.name,
+              sDuration: song.duration!.inSeconds,
+              srcUrl: song.url,
+              dlUrl: dlUrl,
+              source: Source.youtube,
+              artUrl: song.thumbnails.highResUrl,
+            ),
           );
         }
       }
