@@ -6,10 +6,10 @@ abstract interface class SearchEngine {
   Source get source;
 
   /// Searches for tracks.
-  Future<List<Result>> searchForTrack(String query, [int itemCount = 5]);
+  Future<List<LazyResult>> searchForTrack(String query, [int itemCount = 5]);
 
   /// Searches for tracks from a [Result]. Usually more accurate than [searchForTrack].
-  Future<List<Result>> searchForTrackFromResult(Result result, [int itemCount = 5]);
+  Future<List<LazyResult>> searchForTrackFromResult(Result result, [int itemCount = 5]);
 
   /// Constructs a search query from any [Result] for ideal response from this [Source].
   Future<String> constructSearchQuery(Result result);

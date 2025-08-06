@@ -1,7 +1,7 @@
 part of '../spotify.dart';
 
 /// Extension on [SpotifyEngine] to search for albums.
-extension AlbumSearch on SpotifyEngine {
+extension AlbumSearchUtil on SpotifyEngine {
   /// Search for albums on Spotify.
   Future<List<Album>> searchForAlbum(String query, [int itemCount = 5]) async {
     var resultPages =

@@ -1,7 +1,7 @@
 part of '../spotify.dart';
 
 /// Search & Utility functions to find Tracks.
-extension TrackSearch on SpotifyEngine {
+extension TrackSearchUtils on SpotifyEngine {
   /// Find a track from a Spotify Track URL / URI.
   ///
   /// ### Note

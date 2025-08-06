@@ -10,38 +10,50 @@ void main(List<String> args) async {
   var dlM = await DownloadManager.boot();
 
   for (var query in [
-    'Remember The Name Song',
-    'STRUT Song',
-    'Rasputin Song',
-    'Blinding Lights Song',
-    'Shape of You Song',
-    'Uptown Funk Song',
-    'Rolling in the Deep Song',
-    'Someone Like You Song',
-    'Bad Guy Song',
-    'Old Town Road Song',
-    'Senorita Song',
-    'Dance Monkey Song',
-    'Rockstar Song',
-    'One Dance Song',
-    'Closer Song',
-    'Girls Like You Song',
-    'Havana Song',
-    'Despacito Song',
-    'Sorry Song',
-    'Roar Song',
-    'Happy Song',
-    'All About That Bass Song',
+    'Remember The Name Fort Minor',
+    'STRUT The Struts',
+    'Rasputin Boney M.',
+    'Blinding Lights The Weeknd',
+    'Shape of You Ed Sheeran',
+    'Uptown Funk Mark Ronson',
+    'Rolling in the Deep Adele',
+    'Someone Like You Adele',
+    'Bad Guy Billie Eilish',
+    'Old Town Road Lil Nas X',
+    'Senorita Shawn Mendes',
+    'Dance Monkey Tones and I',
+    'Rockstar Post Malone',
+    'One Dance Drake',
+    'Closer The Chainsmokers',
+    'Girls Like You Maroon 5',
+    'Havana Camila Cabello',
+    'Despacito Luis Fonsi',
+    'Sorry Justin Bieber',
+    'Roar Katy Perry',
+    'Happy Pharrell Williams',
+    'All About That Bass Meghan Trainor',
   ]) {
+    var startTime = DateTime.now();
+
     unawaited(
       spS.searchForTrack(query).then(
         (resultList) {
-          ytS.searchForTrackFromResult(resultList.first).then(
-            (resultList) {
-              dlM.process(resultList.first).then(
-                (successState) {
-                  print(
-                    '[$successState] ${resultList.first.title} by ${resultList.first.artists.join(', ')}',
+          resultList.first.toResult().then(
+            (resultResolved) {
+              print('$resultResolved (${resultList.isNotEmpty})');
+              ytS.searchForTrackFromResult(resultResolved).then(
+                (resultList) {
+                  resultList.first.toResult().then(
+                    (resultResolved) {
+                      print('$resultResolved (${resultList.isNotEmpty})');
+                      dlM.process(resultResolved).then(
+                        (successState) {
+                          print(
+                            '[$successState] ${resultResolved.title} by ${resultResolved.artists.join(', ')}\n${startTime.difference(DateTime.now()).inMilliseconds} ms',
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               );

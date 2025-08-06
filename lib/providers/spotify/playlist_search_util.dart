@@ -1,7 +1,7 @@
 part of '../spotify.dart';
 
 /// Search & Utility functions to find Playlists.
-extension PlaylistSearch on SpotifyEngine {
+extension PlaylistSearchUtil on SpotifyEngine {
   /// Search for playlists on Spotify.
   ///
   /// ### Note

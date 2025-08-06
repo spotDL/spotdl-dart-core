@@ -14,13 +14,13 @@ class YoutubeEngine implements SearchEngine {
 
   /// Searches YouTube for the given query.
   @override
-  Future<List<YouTubeResult>> searchForTrack(
+  Future<List<LazyYouTubeResult>> searchForTrack(
     String query, [
     itemCount = 7,
   ]) async {
     var searchResults = await _youtubeEngine.search.search(query);
 
-    var results = <YouTubeResult>[];
+    var results = <LazyYouTubeResult>[];
 
     // We use this to track the number of results we've processed proactively
     // as result processing is kinda slow ~1s per result.
@@ -67,30 +67,26 @@ class YoutubeEngine implements SearchEngine {
         }
       }
 
-      // Extract highest bitrate audio stream URL.
-      unawaited(
-        _youtubeEngine.videos.streams.getManifest(cResult.id).then((streamManifest) {
-          var dlUrl = streamManifest.audioOnly.withHighestBitrate().url.toString();
-
-          // Add the search result to the list.
-          results.add(
-            YouTubeResult(
-              artists: [mainArtist],
-              title: cResult.title,
-              album: album ?? '',
-              sDuration: cResult.duration?.inSeconds ?? 0,
-              srcUrl: cResult.url,
-              dlUrl: dlUrl,
-              artUrl: cResult.thumbnails.highResUrl,
-              source: Source.youtube,
-            ),
-          );
-
-          if (results.length >= itemCount) {
-            exitLock.complete();
-          }
-        }),
+      // Add the search result to the list.
+      results.add(
+        LazyYouTubeResult(
+            artists: () async => [mainArtist],
+            title: () async => cResult.title,
+            album: () async => album ?? '',
+            sDuration: () async => cResult.duration?.inSeconds ?? 0,
+            srcUrl: () async => cResult.url,
+            source: () async => Source.youtube,
+            dlUrl: () async => _youtubeEngine.videos.streams.getManifest(cResult.id).then(
+                  (streamManifest) {
+                    return streamManifest.audioOnly.withHighestBitrate().url.toString();
+                  },
+                ),
+            artUrl: () async => ''),
       );
+
+      if (results.length >= itemCount) {
+        exitLock.complete();
+      }
 
       // If the search results are empty, fetch the next page.
       if (searchResults.isEmpty) {
@@ -115,7 +111,7 @@ class YoutubeEngine implements SearchEngine {
   ///
   /// ### Note
   /// - Minimal effort is put into this function. Prefer using [YoutubeMusicEngine].
-  Future<List<YouTubeResult>> searchForTrackFromResult(
+  Future<List<LazyYouTubeResult>> searchForTrackFromResult(
     Result result, [
     int itemCount = 8,
     int durationDelta = 15,
@@ -123,10 +119,10 @@ class YoutubeEngine implements SearchEngine {
     var searchQuery = await constructSearchQuery(result);
     var results = await searchForTrack(searchQuery, itemCount);
 
-    var filteredResults = <YouTubeResult>[];
+    var filteredResults = <LazyYouTubeResult>[];
 
     for (var ytResult in results) {
-      if ((ytResult.sDuration - result.sDuration).abs() <= durationDelta) {
+      if (((await ytResult.sDuration()) - result.sDuration).abs() <= durationDelta) {
         filteredResults.add(ytResult);
       }
     }
