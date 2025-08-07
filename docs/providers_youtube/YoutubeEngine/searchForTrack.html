@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">spotdl_dart_core</a></li>
-    <li><a href="../../providers_youtube">providers\youtube.dart</a></li>
+    <li><a href="../../providers_youtube/">providers\youtube.dart</a></li>
     <li><a href="../../providers_youtube/YoutubeEngine-class.html">YoutubeEngine</a></li>
     <li class="self-crumb">searchForTrack method</li>
   </ol>
@@ -33,17 +33,14 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button" title="Toggle brightness">
-    <label for="theme">
-      <input type="checkbox" id="theme" value="light-theme">
-      <span id="dark-theme-button" class="material-symbols-outlined">
-        dark_mode
-      </span>
-      <span id="light-theme-button" class="material-symbols-outlined">
-        light_mode
-      </span>
-    </label>
-  </div>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
 </header>
 <main>
 <div
@@ -59,12 +56,12 @@
       
   <div>
     <ol class="annotation-list">
-        <li>@<a href="https://api.dart.dev/stable/3.7.0/dart-core/override-constant.html">override</a></li>
+        <li>@<a href="https://api.dart.dev/stable/3.8.1/dart-core/override-constant.html">override</a></li>
     </ol>
   </div>
-<span class="returntype"><a href="https://api.dart.dev/stable/3.7.0/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/3.7.0/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../providers_youtube/YouTubeResult-class.html">YouTubeResult</a></span>&gt;</span></span>&gt;</span></span>
-<span class="name ">searchForTrack</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="searchForTrack-param-query"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.7.0/dart-core/String-class.html">String</a></span> <span class="parameter-name">query</span>, [</span></li>
-<li><span class="parameter" id="searchForTrack-param-itemCount"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.7.0/dart-core/int-class.html">int</a></span> <span class="parameter-name">itemCount</span> = <span class="default-value">5</span></span></li>
+<span class="returntype"><a href="https://api.dart.dev/stable/3.8.1/dart-core/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../providers_youtube/LazyYouTubeResult-class.html">LazyYouTubeResult</a></span>&gt;</span></span>
+<span class="name ">searchForTrack</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="searchForTrack-param-query"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.8.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">query</span>, [</span></li>
+<li><span class="parameter" id="searchForTrack-param-itemCount"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.8.1/dart-core/int-class.html">int</a></span> <span class="parameter-name">itemCount</span> = <span class="default-value">7</span></span></li>
 </ol>])
 
       <div class="features"><span class="feature">override</span></div>
@@ -80,91 +77,85 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-Future&lt;List&lt;YouTubeResult&gt;&gt; searchForTrack(
+Stream&lt;LazyYouTubeResult&gt; searchForTrack(
   String query, [
-  itemCount = 5,
-]) async {
+  itemCount = 7,
+]) async* {
   var searchResults = await _youtubeEngine.search.search(query);
 
-  var results = &lt;YouTubeResult&gt;[];
+  &#47;&#47; We use this to track the number of results we&#39;ve processed proactively
+  &#47;&#47; as result processing is kinda slow ~1s per result.
+  var resultCount = 0;
 
-  while (results.length &lt; itemCount) {
-    var mainArtist = searchResults.first.author.split(&#39;- Topic&#39;).first;
+  while (resultCount &lt; itemCount) {
+    resultCount++;
+    var cResult = searchResults.removeAt(0);
+
+    var mainArtist = cResult.author.split(&#39;- Topic&#39;).first;
 
     &#47;&#47; We extract the album name from the description if it starts with &#39;Provided to YouTube by &#39;.
-    &#47;&#47;
     &#47;&#47; NOTE: auto-generated youtube description goes like this:
+
     &#47;&#47; -------------------------------------------------------------------------------------------
     &#47;&#47; Example #01
     &#47;&#47; -------------------------------------------------------------------------------------------
     &#47;&#47;
     &#47;&#47; Provided to YouTube by DistroKid                                       (Provider)
-    &#47;&#47;
     &#47;&#47; Ira · Ivory Rasmus                                                     (Title) · (Artist)
-    &#47;&#47;
     &#47;&#47; Ira                                                                    (Album)
-    &#47;&#47;
     &#47;&#47; ℗ And Friends                                                          (Label)
-    &#47;&#47;
+
     &#47;&#47; -------------------------------------------------------------------------------------------
     &#47;&#47; Example #02
     &#47;&#47; -------------------------------------------------------------------------------------------
-    &#47;&#47;
     &#47;&#47; Provided to YouTube by Universal Music Group                           (Provider)
-    &#47;&#47;
     &#47;&#47; Abracadabra · Lady Gaga                                                (Title) · (Artist)
-    &#47;&#47;
     &#47;&#47; Abracadabra                                                            (Album)
-    &#47;&#47;
     &#47;&#47; ℗ 2024 Interscope Records                                              (Label)
     &#47;&#47;
     &#47;&#47; -------------------------------------------------------------------------------------------
-    &#47;&#47;
+
     &#47;&#47; We&#39;re using a convoluted split because the scraped description doesn&#39;t always come with
     &#47;&#47; &quot;\n\n&quot; even if youtube has the newlines in it&#39;s rendering.
     String? album;
 
-    if (searchResults.first.description.startsWith(&#39;Provided to YouTube by &#39;)) {
+    if (cResult.description.startsWith(&#39;Provided to YouTube by &#39;)) {
       try {
-        album = searchResults.first.description.split(mainArtist)[1].split(&#39;℗&#39;).first.trim();
+        album = cResult.description.split(mainArtist)[1].split(&#39;℗&#39;).first.trim();
       } catch (_) {
         album = null;
       }
     }
 
-    &#47;&#47; Extract highest bitrate audio stream URL.
-    var streamManifest = await _youtubeEngine.videos.streams.getManifest(searchResults.first.id);
-    var dlUrl = streamManifest.audioOnly.withHighestBitrate().url.toString();
-
     &#47;&#47; Add the search result to the list.
-    results.add(
-      YouTubeResult(
-        artists: [mainArtist],
-        title: searchResults.first.title,
-        album: album,
-        sDuration: searchResults.first.duration!.inSeconds,
-        srcUrl: searchResults.first.url,
-        dlUrl: dlUrl,
-        source: Source.youtube,
-      ),
-    );
+    yield LazyYouTubeResult(
+      artists: () async* {
+        yield mainArtist;
+      },
+      title: () async =&gt; cResult.title,
+      album: () async =&gt; album ?? &#39;&#39;,
+      sDuration: () async =&gt; cResult.duration?.inSeconds ?? 0,
+      srcUrl: () async =&gt; cResult.url,
+      source: () async =&gt; Source.youtube,
+      dlUrl: () async {
+        final streamManifest = await _youtubeEngine.videos.streams.getManifest(cResult.id);
 
-    &#47;&#47; Remove the first element from the search results.
-    var _ = searchResults.removeAt(0);
+        return streamManifest.audioOnly.withHighestBitrate().url.toString();
+      },
+      artUrl: () async =&gt; &#39;&#39;,
+    );
 
     &#47;&#47; If the search results are empty, fetch the next page.
     if (searchResults.isEmpty) {
       var nextResultSet = await searchResults.nextPage();
 
-      if (nextResultSet == null) {
+      if (nextResultSet == null || nextResultSet.isEmpty) {
         break;
       } else {
         searchResults = nextResultSet;
       }
     }
   }
-
-  return results;
 }</code></pre>
 </section>
 
@@ -179,7 +170,7 @@ Future&lt;List&lt;YouTubeResult&gt;&gt; searchForTrack(
 </header>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">spotdl_dart_core</a></li>
-    <li><a href="../../providers_youtube">youtube</a></li>
+    <li><a href="../../providers_youtube/">youtube</a></li>
     <li><a href="../../providers_youtube/YoutubeEngine-class.html">YoutubeEngine</a></li>
     <li class="self-crumb">searchForTrack method</li>
 </ol>

@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">spotdl_dart_core</a></li>
-    <li><a href="../../providers_spotify">providers\spotify.dart</a></li>
+    <li><a href="../../providers_spotify/">providers\spotify.dart</a></li>
     <li><a href="../../providers_spotify/TrackSearch.html">TrackSearch</a></li>
     <li class="self-crumb">getTrackFromTrackUrl method</li>
   </ol>
@@ -33,17 +33,14 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button" title="Toggle brightness">
-    <label for="theme">
-      <input type="checkbox" id="theme" value="light-theme">
-      <span id="dark-theme-button" class="material-symbols-outlined">
-        dark_mode
-      </span>
-      <span id="light-theme-button" class="material-symbols-outlined">
-        light_mode
-      </span>
-    </label>
-  </div>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
 </header>
 <main>
 <div
@@ -57,8 +54,8 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="https://api.dart.dev/stable/3.7.0/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../providers_spotify/SpotifyResult-class.html">SpotifyResult</a></span>&gt;</span></span>
-<span class="name ">getTrackFromTrackUrl</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="getTrackFromTrackUrl-param-url"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.7.0/dart-core/String-class.html">String</a></span> <span class="parameter-name">url</span></span></li>
+<span class="returntype"><a href="https://api.dart.dev/stable/3.8.1/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../providers_spotify/SpotifyResult-class.html">SpotifyResult</a></span>&gt;</span></span>
+<span class="name ">getTrackFromTrackUrl</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="getTrackFromTrackUrl-param-url"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.8.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">url</span></span></li>
 </ol>)
 
       
@@ -81,15 +78,15 @@
   var track = await _spotifyEngine.tracks.get(SpotifyEngine.extractId(url));
 
   return SpotifyResult(
-    artists: track.artists!.map((artist) =&gt; artist.name!).toList(),
-    title: track.name!,
-    album: track.album!.name!,
+    artists: track.artists?.map((artist) =&gt; artist.name!).toList() ?? [],
+    title: track.name ?? &#39;&#39;,
+    album: track.album?.name ?? &#39;&#39;,
     sDuration: track.durationMs! ~&#47; 1000,
-    srcUrl: &#39;https:&#47;&#47;open.spotify.com&#47;track&#47;${track.uri!.split(&#39;:&#39;).last}&#39;,
-    artUrl: track.album!.images!.first.url!,
+    srcUrl: &#39;https:&#47;&#47;open.spotify.com&#47;track&#47;${track.uri?.split(&#39;:&#39;).last}&#39;,
+    artUrl: track.album?.images?.first.url ?? &#39;&#39;,
     source: Source.spotify,
-    diskNumber: track.discNumber!,
-    trackNumber: track.trackNumber!,
+    diskNumber: track.discNumber ?? 0,
+    trackNumber: track.trackNumber ?? 0,
   );
 }</code></pre>
 </section>
@@ -105,7 +102,7 @@
 </header>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">spotdl_dart_core</a></li>
-    <li><a href="../../providers_spotify">spotify</a></li>
+    <li><a href="../../providers_spotify/">spotify</a></li>
     <li><a href="../../providers_spotify/TrackSearch.html">TrackSearch</a></li>
     <li class="self-crumb">getTrackFromTrackUrl method</li>
 </ol>

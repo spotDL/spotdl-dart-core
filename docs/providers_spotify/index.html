@@ -31,17 +31,14 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button" title="Toggle brightness">
-    <label for="theme">
-      <input type="checkbox" id="theme" value="light-theme">
-      <span id="dark-theme-button" class="material-symbols-outlined">
-        dark_mode
-      </span>
-      <span id="light-theme-button" class="material-symbols-outlined">
-        light_mode
-      </span>
-    </label>
-  </div>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
 </header>
 <main>
 <div
@@ -78,6 +75,14 @@
   Represents an album.
 </dd>
 
+          <dt id="LazySpotifyResult">
+  <span class="name "><a href="../providers_spotify/LazySpotifyResult-class.html">LazySpotifyResult</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
           <dt id="Playlist">
   <span class="name "><a href="../providers_spotify/Playlist-class.html">Playlist</a></span> 
 
@@ -111,8 +116,8 @@
     <section class="summary offset-anchor" id="extensions">
       <h2>Extensions</h2>
       <dl>
-          <dt id="AlbumSearch">
-  <span class="name "><a href="../providers_spotify/AlbumSearch.html">AlbumSearch</a></span>
+          <dt id="AlbumSearchUtil">
+  <span class="name "><a href="../providers_spotify/AlbumSearchUtil.html">AlbumSearchUtil</a></span>
   on <a href="../providers_spotify/SpotifyEngine-class.html">SpotifyEngine</a>
   
 
@@ -121,8 +126,8 @@
   Extension on <a href="../providers_spotify/SpotifyEngine-class.html">SpotifyEngine</a> to search for albums.
 </dd>
 
-          <dt id="PlaylistSearch">
-  <span class="name "><a href="../providers_spotify/PlaylistSearch.html">PlaylistSearch</a></span>
+          <dt id="PlaylistSearchUtil">
+  <span class="name "><a href="../providers_spotify/PlaylistSearchUtil.html">PlaylistSearchUtil</a></span>
   on <a href="../providers_spotify/SpotifyEngine-class.html">SpotifyEngine</a>
   
 
@@ -131,8 +136,8 @@
   Search &amp; Utility functions to find Playlists.
 </dd>
 
-          <dt id="TrackSearch">
-  <span class="name "><a href="../providers_spotify/TrackSearch.html">TrackSearch</a></span>
+          <dt id="TrackSearchUtils">
+  <span class="name "><a href="../providers_spotify/TrackSearchUtils.html">TrackSearchUtils</a></span>
   on <a href="../providers_spotify/SpotifyEngine-class.html">SpotifyEngine</a>
   
 
@@ -164,13 +169,13 @@
     <h5><span class="package-name">spotdl_dart_core</span> <span class="package-kind">package</span></h5>
     <ol>
       <li class="section-title">Libraries</li>
-      <li><a href="../providers_common">providers\common</a></li>
-      <li><a href="../providers_spotify">providers\spotify</a></li>
-      <li><a href="../providers_youtube">providers\youtube</a></li>
-      <li><a href="../providers_youtube_music">providers\youtube_music</a></li>
-      <li><a href="../utils_convert">utils\convert</a></li>
-      <li><a href="../utils_download">utils\download</a></li>
-      <li><a href="../utils_match">utils\match</a></li>
+      <li><a href="../providers_common/">providers\common</a></li>
+      <li><a href="../providers_spotify/">providers\spotify</a></li>
+      <li><a href="../providers_youtube/">providers\youtube</a></li>
+      <li><a href="../providers_youtube_music/">providers\youtube_music</a></li>
+      <li><a href="../utils/">utils</a></li>
+      <li><a href="../utils_convert/">utils\convert</a></li>
+      <li><a href="../utils_match/">utils\match</a></li>
 </ol>
 
   </div>

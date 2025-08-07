@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">spotdl_dart_core</a></li>
-    <li><a href="../../providers_spotify">providers\spotify.dart</a></li>
+    <li><a href="../../providers_spotify/">providers\spotify.dart</a></li>
     <li><a href="../../providers_spotify/SpotifyEngine-class.html">SpotifyEngine</a></li>
     <li class="self-crumb">searchForTrackFromResult method</li>
   </ol>
@@ -33,17 +33,14 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button" title="Toggle brightness">
-    <label for="theme">
-      <input type="checkbox" id="theme" value="light-theme">
-      <span id="dark-theme-button" class="material-symbols-outlined">
-        dark_mode
-      </span>
-      <span id="light-theme-button" class="material-symbols-outlined">
-        light_mode
-      </span>
-    </label>
-  </div>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
 </header>
 <main>
 <div
@@ -59,15 +56,15 @@
       
   <div>
     <ol class="annotation-list">
-        <li>@<a href="https://api.dart.dev/stable/3.7.0/dart-core/override-constant.html">override</a></li>
+        <li>@<a href="https://api.dart.dev/stable/3.8.1/dart-core/override-constant.html">override</a></li>
     </ol>
   </div>
-<span class="returntype"><a href="https://api.dart.dev/stable/3.7.0/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/3.7.0/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../providers_spotify/SpotifyResult-class.html">SpotifyResult</a></span>&gt;</span></span>&gt;</span></span>
-<span class="name ">searchForTrackFromResult</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="searchForTrackFromResult-param-result"><span class="type-annotation"><a href="../../providers_common/Result-class.html">Result</a></span> <span class="parameter-name">result</span>, [</span></li>
-<li><span class="parameter" id="searchForTrackFromResult-param-itemCount"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.7.0/dart-core/int-class.html">int</a></span> <span class="parameter-name">itemCount</span> = <span class="default-value">5</span>, </span></li>
-<li><span class="parameter" id="searchForTrackFromResult-param-durationDelta"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.7.0/dart-core/int-class.html">int</a></span> <span class="parameter-name">durationDelta</span> = <span class="default-value">15</span>, </span></li>
-<li><span class="parameter" id="searchForTrackFromResult-param-commonArtistThreshold"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.7.0/dart-core/double-class.html">double</a></span> <span class="parameter-name">commonArtistThreshold</span> = <span class="default-value">0.5</span>, </span></li>
-<li><span class="parameter" id="searchForTrackFromResult-param-albumMatchRequired"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.7.0/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">albumMatchRequired</span> = <span class="default-value">false</span>, </span></li>
+<span class="returntype"><a href="https://api.dart.dev/stable/3.8.1/dart-core/Stream-class.html">Stream</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../providers_spotify/LazySpotifyResult-class.html">LazySpotifyResult</a></span>&gt;</span></span>
+<span class="name ">searchForTrackFromResult</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="searchForTrackFromResult-param-result"><span class="type-annotation"><a href="../../providers_common/LazyResult-class.html">LazyResult</a></span> <span class="parameter-name">result</span>, [</span></li>
+<li><span class="parameter" id="searchForTrackFromResult-param-itemCount"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.8.1/dart-core/int-class.html">int</a></span> <span class="parameter-name">itemCount</span> = <span class="default-value">5</span>, </span></li>
+<li><span class="parameter" id="searchForTrackFromResult-param-durationDelta"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.8.1/dart-core/int-class.html">int</a></span> <span class="parameter-name">durationDelta</span> = <span class="default-value">15</span>, </span></li>
+<li><span class="parameter" id="searchForTrackFromResult-param-commonArtistThreshold"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.8.1/dart-core/double-class.html">double</a></span> <span class="parameter-name">commonArtistThreshold</span> = <span class="default-value">0.5</span>, </span></li>
+<li><span class="parameter" id="searchForTrackFromResult-param-albumMatchRequired"><span class="type-annotation"><a href="https://api.dart.dev/stable/3.8.1/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">albumMatchRequired</span> = <span class="default-value">false</span>, </span></li>
 </ol>])
 
       <div class="features"><span class="feature">override</span></div>
@@ -75,7 +72,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Searches for tracks from a <a href="../../providers_common/Result-class.html">Result</a>. Usually more accurate than <a href="../../providers_spotify/SpotifyEngine/searchForTrack.html">searchForTrack</a>.</p>
+  <p>Searches for tracks from a <a href="../../providers_common/LazyResult-class.html">LazyResult</a>. Usually more accurate than <a href="../../providers_spotify/SpotifyEngine/searchForTrack.html">searchForTrack</a>.</p>
 </section>
 
 
@@ -83,43 +80,45 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-Future&lt;List&lt;SpotifyResult&gt;&gt; searchForTrackFromResult(
-  Result result, [
+Stream&lt;LazySpotifyResult&gt; searchForTrackFromResult(
+  LazyResult result, [
   int itemCount = 5,
   int durationDelta = 15,
   double commonArtistThreshold = 0.5,
   bool albumMatchRequired = false,
-]) async {
+]) async* {
   var searchQuery = await constructSearchQuery(result);
   var results = await searchForTrack(searchQuery, itemCount);
 
-  var filteredResults = &lt;SpotifyResult&gt;[];
+  await for (var spotifyResult in results) {
+    var sDuration = await spotifyResult.sDuration();
+    var rDuration = await result.sDuration();
 
-  for (var spotifyResult in results) {
     &#47;&#47; Filter out results with more than durationDelta seconds difference.
-    if ((spotifyResult.sDuration - result.sDuration).abs() &gt;= durationDelta) {
+    if ((sDuration - rDuration).abs() &gt;= durationDelta) {
       continue;
     }
 
-    &#47;&#47; Filter out results with less than commonArtistThreshold common artists.
-    var resultArtists = result.artists.map((artist) =&gt; artist.toLowerCase());
-    var spotifyArtists = spotifyResult.artists.map((sArtist) =&gt; sArtist.toLowerCase());
-    var commonArtists = resultArtists.where((artist) =&gt; spotifyArtists.contains(artist));
+    &#47;&#47; Filter out result with less than commonArtistThreshold common artists.
+    var sArtists = (await spotifyResult.artists().toList()).map((artist) =&gt; artist.toLowerCase());
+    var rArtists = (await result.artists().toList()).map((artist) =&gt; artist.toLowerCase());
+    var cArtists = sArtists.where((sArtist) =&gt; rArtists.contains(sArtist)).length;
 
-    if (commonArtists.length &lt; (resultArtists.length * commonArtistThreshold).round()) {
+    if (cArtists &lt; (rArtists.length * commonArtistThreshold).round()) {
       continue;
     }
 
     &#47;&#47; Album Match depending on input parameters.
-    if (spotifyResult.album.toLowerCase() != result.album!.toLowerCase() &amp;&amp; albumMatchRequired) {
+    var sAlbum = (await spotifyResult.album()).toLowerCase();
+    var rAlbum = (await result.album()).toLowerCase();
+
+    if (sAlbum != rAlbum &amp;&amp; albumMatchRequired) {
       continue;
     }
 
-    &#47;&#47; If a result passes all filters, add to filtered results.
-    filteredResults.add(spotifyResult);
+    &#47;&#47; Yield the result if all checks pass.
+    yield spotifyResult;
   }
-
-  return filteredResults;
 }</code></pre>
 </section>
 
@@ -134,7 +133,7 @@ Future&lt;List&lt;SpotifyResult&gt;&gt; searchForTrackFromResult(
 </header>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">spotdl_dart_core</a></li>
-    <li><a href="../../providers_spotify">spotify</a></li>
+    <li><a href="../../providers_spotify/">spotify</a></li>
     <li><a href="../../providers_spotify/SpotifyEngine-class.html">SpotifyEngine</a></li>
     <li class="self-crumb">searchForTrackFromResult method</li>
 </ol>
