@@ -2,7 +2,7 @@ part of '../youtube.dart';
 
 /// A search result from YouTube.
 class LazyYouTubeResult extends LazyResult {
-  final Future<List<String>> Function() _artists;
+  final Stream<String> Function() _artists;
 
   final Future<String> Function() _title;
 
@@ -19,7 +19,7 @@ class LazyYouTubeResult extends LazyResult {
   final Future<Source> Function() _source;
 
   LazyYouTubeResult({
-    required Future<List<String>> Function() artists,
+    required Stream<String> Function() artists,
     required Future<String> Function() title,
     required Future<String> Function() album,
     required Future<int> Function() sDuration,
@@ -43,7 +43,7 @@ class LazyYouTubeResult extends LazyResult {
   Future<String> artUrl() => _artUrl();
 
   @override
-  Future<List<String>> artists() => _artists();
+  Stream<String> artists() => _artists();
 
   @override
   Future<String> dlUrl() => _dlUrl();
@@ -62,7 +62,7 @@ class LazyYouTubeResult extends LazyResult {
 
   @override
   Future<Result> toResult() async => YouTubeResult(
-        artists: await _artists(),
+        artists: await _artists().toList(),
         title: await _title(),
         album: await _album(),
         sDuration: await _sDuration(),

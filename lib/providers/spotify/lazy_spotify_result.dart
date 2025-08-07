@@ -1,11 +1,15 @@
 part of '../spotify.dart';
 
 class LazySpotifyResult extends LazyResult {
+  final int diskNumber;
+
+  final int trackNumber;
+  
   final Future<String> Function() _album;
 
   final Future<String> Function() _artUrl;
 
-  final Future<List<String>> Function() _artists;
+  final Stream<String> Function() _artists;
 
   final Future<String> Function() _dlUrl;
 
@@ -15,14 +19,10 @@ class LazySpotifyResult extends LazyResult {
 
   final Future<String> Function() _title;
 
-  final int diskNumber;
-
-  final int trackNumber;
-
   LazySpotifyResult({
     required Future<String> Function() album,
     required Future<String> Function() artUrl,
-    required Future<List<String>> Function() artists,
+    required Stream<String> Function() artists,
     required Future<String> Function() dlUrl,
     required Future<int> Function() sDuration,
     required Future<String> Function() srcUrl,
@@ -44,7 +44,7 @@ class LazySpotifyResult extends LazyResult {
   Future<String> artUrl() => _artUrl();
 
   @override
-  Future<List<String>> artists() => _artists();
+  Stream<String> artists() => _artists();
 
   @override
   Future<String> dlUrl() => _dlUrl();
@@ -63,7 +63,7 @@ class LazySpotifyResult extends LazyResult {
 
   @override
   Future<Result> toResult() async => SpotifyResult(
-        artists: await artists(),
+        artists: await artists().toList(),
         title: await title(),
         album: await album(),
         sDuration: await sDuration(),

@@ -26,7 +26,7 @@ class SpotifyEngine implements SearchEngine {
   // NOTE: This should be in the [TrackSearch] extension, but is implemented here to keep in line
   // with the [SrcEngine] interface.
   @override
-  Future<List<LazySpotifyResult>> searchForTrack(String query, [int itemCount = 5]) async {
+  Stream<LazySpotifyResult> searchForTrack(String query, [int itemCount = 5]) async* {
     var resultPages =
         await _spotifyEngine.search.get(query, types: [SearchType.track]).first(itemCount);
 
@@ -39,70 +39,71 @@ class SpotifyEngine implements SearchEngine {
         for (var item in page.items!) {
           var track = item as Track;
 
-          // for some reason, all fields are nullable, e.g. track.artist is not of type `Artist`,
-          // but `Artist?`. I assume that it will always be non-null, so I'm using `!` to access.
-          results.add(
-            LazySpotifyResult(
-              artists: () async => track.artists?.map((artist) => artist.name!).toList() ?? [],
-              title: () async => track.name ?? '',
-              album: () async => track.album?.name ?? '',
-              sDuration: () async => track.durationMs! ~/ 1000,
-              srcUrl: () async => 'https://open.spotify.com/track/${track.uri?.split(':').last}',
-              dlUrl: () async => '',
-              artUrl: () async => track.album?.images?.first.url ?? '',
-              diskNumber: track.discNumber ?? 0,
-              trackNumber: track.trackNumber ?? 0,
-            ),
+          yield LazySpotifyResult(
+            artists: () async* {
+              if (track.artists != null) {
+                for (var artist in track.artists!) {
+                  yield artist.name!;
+                }
+              }
+            },
+            title: () async => track.name ?? '',
+            album: () async => track.album?.name ?? '',
+            sDuration: () async => track.durationMs! ~/ 1000,
+            srcUrl: () async => 'https://open.spotify.com/track/${track.uri?.split(':').last}',
+            dlUrl: () async => '', // Spotify does not provide a direct download URL.
+            artUrl: () async => track.album?.images?.first.url ?? '',
+            diskNumber: track.discNumber ?? 0,
+            trackNumber: track.trackNumber ?? 0,
           );
         }
       }
     }
-
-    return results;
   }
 
   @override
-  Future<List<LazySpotifyResult>> searchForTrackFromResult(
-    Result result, [
+  Stream<LazySpotifyResult> searchForTrackFromResult(
+    LazyResult result, [
     int itemCount = 5,
     int durationDelta = 15,
     double commonArtistThreshold = 0.5,
     bool albumMatchRequired = false,
-  ]) async {
+  ]) async* {
     var searchQuery = await constructSearchQuery(result);
     var results = await searchForTrack(searchQuery, itemCount);
 
-    var filteredResults = <LazySpotifyResult>[];
+    await for (var spotifyResult in results) {
+      var sDuration = await spotifyResult.sDuration();
+      var rDuration = await result.sDuration();
 
-    for (var spotifyResult in results) {
       // Filter out results with more than durationDelta seconds difference.
-      if (((await spotifyResult.sDuration()) - result.sDuration).abs() >= durationDelta) {
+      if ((sDuration - rDuration).abs() >= durationDelta) {
         continue;
       }
 
-      // Filter out results with less than commonArtistThreshold common artists.
-      var resultArtists = result.artists.map((artist) => artist.toLowerCase());
-      var spotifyArtists = (await spotifyResult.artists()).map((sArtist) => sArtist.toLowerCase());
-      var commonArtists = resultArtists.where((artist) => spotifyArtists.contains(artist));
+      // Filter out result with less than commonArtistThreshold common artists.
+      var sArtists = (await spotifyResult.artists().toList()).map((artist) => artist.toLowerCase());
+      var rArtists = (await result.artists().toList()).map((artist) => artist.toLowerCase());
+      var cArtists = sArtists.where((sArtist) => rArtists.contains(sArtist)).length;
 
-      if (commonArtists.length < (resultArtists.length * commonArtistThreshold).round()) {
+      if (cArtists < (rArtists.length * commonArtistThreshold).round()) {
         continue;
       }
 
       // Album Match depending on input parameters.
-      if ((await spotifyResult.album()).toLowerCase() != result.album.toLowerCase() && albumMatchRequired) {
+      var sAlbum = (await spotifyResult.album()).toLowerCase();
+      var rAlbum = (await result.album()).toLowerCase();
+
+      if (sAlbum != rAlbum && albumMatchRequired) {
         continue;
       }
 
-      // If a result passes all filters, add to filtered results.
-      filteredResults.add(spotifyResult);
+      // Yield the result if all checks pass.
+      yield spotifyResult;
     }
-
-    return filteredResults;
   }
 
   @override
-  Future<String> constructSearchQuery(Result result) async {
-    return '${result.title} by ${result.artists.join(', ')} from "${result.album}"';
-  }
+  Future<String> constructSearchQuery(LazyResult result) async =>
+      '${await result.title()} by ${(await result.artists()).join(', ')} from "${await result.album()}"';
 }

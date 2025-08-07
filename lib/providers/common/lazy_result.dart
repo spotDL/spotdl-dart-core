@@ -3,10 +3,10 @@ part of '../common.dart';
 /// Abstract base for all search results.
 abstract class LazyResult {
   /// Artist(s) of the song.
-  Future<List<String>> artists();
+  Stream<String> artists();
 
   /// Whether the song has any artists.
-  Future<bool> hasArtists() async => (await artists()).isNotEmpty;
+  Future<bool> hasArtists() async => !await artists().isEmpty;
 
   /// Title of the song.
   Future<String> title();
@@ -21,7 +21,7 @@ abstract class LazyResult {
   Future<int> sDuration();
 
   /// Whether the song has a duration.
-  Future<bool> hasDuration() async => (await sDuration()) > 0;
+  Future<bool> hasDuration() async => await sDuration() > 0;
 
   /// URL of the song from the given source.
   Future<String> srcUrl();
